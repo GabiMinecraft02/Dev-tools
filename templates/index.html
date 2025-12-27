@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ultimate Dev Tools</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen">
+
+<header class="p-6 text-center bg-slate-950 shadow-lg">
+  <h1 class="text-3xl font-bold text-sky-400">Ultimate Dev Tools</h1>
+  <p class="text-slate-400">Boîte à outils ultime pour développeurs</p>
+</header>
+
+<input id="search" placeholder="Rechercher un outil..." class="block mx-auto mt-6 w-80 p-2 rounded bg-slate-800" onkeyup="filterTools()" />
+
+<main id="tools" class="p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+
+<section class="tool"><h2>Base64</h2><textarea id="b64i"></textarea><div><button onclick="encB64()">Encode</button><button onclick="decB64()">Decode</button></div><textarea id="b64o"></textarea></section>
+
+<section class="tool"><h2>JSON Formatter</h2><textarea id="ji"></textarea><button onclick="fmtJSON()">Formatter</button><textarea id="jo"></textarea></section>
+
+<section class="tool"><h2>Password</h2><input id="pl" type="number" value="16"/><button onclick="genPass()">Générer</button><input id="po"/></section>
+
+<section class="tool"><h2>UUID v4</h2><button onclick="uuid()">Générer</button><input id="uo"/></section>
+
+<section class="tool"><h2>Timestamp</h2><button onclick="ts()">Maintenant</button><input id="to"/></section>
+
+<section class="tool"><h2>URL Encode/Decode</h2><textarea id="urli"></textarea><div><button onclick="encURL()">Encode</button><button onclick="decURL()">Decode</button></div><textarea id="urlo"></textarea></section>
+
+<section class="tool"><h2>JWT Decoder</h2><textarea id="jwti" placeholder="token.jwt.here"></textarea><button onclick="decJWT()">Décoder</button><textarea id="jwto"></textarea></section>
+
+<section class="tool"><h2>Regex Tester</h2><input id="regex" placeholder="Expression"/><input id="regtxt" placeholder="Texte"/><button onclick="testRegex()">Tester</button><input id="rego"/></section>
+
+<section class="tool"><h2>Minifier JS</h2><textarea id="mini"></textarea><button onclick="minJS()">Minifier</button><textarea id="mino"></textarea></section>
+
+<section class="tool"><h2>Hash SHA-256</h2><input id="hashi"/><button onclick="hash()">Hasher</button><input id="hasho"/></section>
+
+<section class="tool"><h2>Color Converter</h2><input type="color" id="color" onchange="colorConv()"/><input id="coloro"/></section>
+
+</main>
+
+<footer class="text-center p-4 bg-slate-950 text-slate-500">© 2025 – Ultimate Dev Tools</footer>
+
+<style>
+.tool{background:#020617;padding:16px;border-radius:16px;box-shadow:0 10px 25px rgba(0,0,0,.4)}
+.tool h2{color:#22d3ee;font-weight:600;margin-bottom:6px}
+.tool textarea,.tool input{width:100%;margin-top:6px;padding:6px;border-radius:8px;background:#0f172a}
+.tool button{margin-top:6px;background:#38bdf8;color:#020617;padding:6px 10px;border-radius:8px;font-weight:600}
+</style>
+
+<script>
+const encB64=()=>b64o.value=btoa(unescape(encodeURIComponent(b64i.value)))
+const decB64=()=>b64o.value=decodeURIComponent(escape(atob(b64i.value)))
+const fmtJSON=()=>{try{jo.value=JSON.stringify(JSON.parse(ji.value),null,2)}catch{alert('JSON invalide')}}
+const genPass=()=>po.value=Array.from({length:pl.value},()=>"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()"[Math.floor(Math.random()*72)]).join('')
+const uuid=()=>uo.value=crypto.randomUUID()
+const ts=()=>to.value=Math.floor(Date.now()/1000)
+const encURL=()=>urlo.value=encodeURIComponent(urli.value)
+const decURL=()=>urlo.value=decodeURIComponent(urli.value)
+const decJWT=()=>{try{jwto.value=JSON.stringify(JSON.parse(atob(jwti.value.split('.')[1])),null,2)}catch{alert('JWT invalide')}}
+const testRegex=()=>rego.value=new RegExp(regex.value).test(regtxt.value)
+const minJS=()=>mino.value=mini.value.replace(/\s+/g,' ')
+async function hash(){const e=new TextEncoder().encode(hashi.value);const b=await crypto.subtle.digest('SHA-256',e);hasho.value=[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')}
+const colorConv=()=>coloro.value=color.value
+function filterTools(){const q=search.value.toLowerCase();document.querySelectorAll('.tool').forEach(t=>t.style.display=t.innerText.toLowerCase().includes(q)?'block':'none')}
+</script>
+</body>
+</html>
